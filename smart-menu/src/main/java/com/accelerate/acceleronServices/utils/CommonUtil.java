@@ -1,4 +1,4 @@
-package com.accelerate.acceleronServices.utility;
+package com.accelerate.acceleronServices.utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -8,9 +8,8 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
 
-// All the utilities that don't have a class of their own
 @Component
-public class MiscUtilities {
+public class CommonUtil {
 
     public String convertDateToDatestamp(String date) {
         Pattern regex = Pattern.compile("^(\\d\\d)-(\\d\\d)-(\\d\\d\\d\\d)$");

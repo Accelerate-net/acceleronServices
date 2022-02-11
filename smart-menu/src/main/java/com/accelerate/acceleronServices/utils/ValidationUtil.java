@@ -1,4 +1,4 @@
-package com.accelerate.acceleronServices.utility;
+package com.accelerate.acceleronServices.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,11 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-/**
- * Utility used for input validation
- */
 @Component
-public class ValidationUtility {
+public class ValidationUtil {
 
     @Value("${app.validation.dateFormat}")
     private String dateFormat;
