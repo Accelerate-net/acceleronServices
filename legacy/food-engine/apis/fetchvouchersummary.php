@@ -1,0 +1,299 @@
+<?php
+header('Access-Control-Allow-Origin: *'); 
+header('Access-Control-Allow-Headers: Content-Type, responseType');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Credentials: true');
+
+error_reporting(0);
+
+//Database Connection
+define('INCLUDE_CHECK', true);
+require 'connect.php';
+
+//Encryption Credentials
+define('SECURE_CHECK', true);
+require 'secure.php';
+
+require('fpdf/fpdf.php');
+
+//Encryption Validation
+if(!isset($_GET['access'])){
+	die("Error. Failed to generate report.");
+}
+
+$token = $_GET['access'];
+
+$decryptedtoken = openssl_decrypt($token, $encryptionMethod, $secretHash);
+$tokenid = json_decode($decryptedtoken, true);
+
+//Expiry Validation
+date_default_timezone_set('Asia/Calcutta');
+$dateStamp = date_create($tokenid['date']);
+$today = date_create(date("Y-m-j"));
+$interval = date_diff($dateStamp, $today);
+$interval = $interval->format('%a');
+
+if($interval > $tokenExpiryDays){
+	die("Expired. Please login again and try.");
+}
+
+//Check if the token is tampered
+if($tokenid['outlet']){
+	$outlet = $tokenid['outlet'];
+	$adminmobile = $tokenid['mobile'];
+}
+else{
+	die("Not authorised");
+}
+
+
+
+//Generate All Summary
+function generateSummary($f_isDatewise, $f_query_date, $f_max_to_date){
+
+				$pdf = new FPDF();		
+				$pdf->SetTitle('Zaitoon Voucher Summary');
+				$pdf->AddPage();
+				
+				$query_date = $f_query_date;
+							
+				//Quick Analytics	
+				if(!$f_isDatewise){				
+					$totalVouchers = mysql_fetch_assoc(mysql_query("SELECT COUNT(`id`) as `total` FROM `z_vouchers` WHERE 1"));		
+					$totalActiveVouchers = mysql_fetch_assoc(mysql_query("SELECT COUNT(`id`) as `total` FROM `z_vouchers` WHERE `isActive`=1 AND `usedOrder` = ''"));	
+					$totalUsedVouchers = mysql_fetch_assoc(mysql_query("SELECT COUNT(`id`) as `total` FROM `z_vouchers` WHERE `usedOrder` != ''"));
+					$totalSelfVouchers = mysql_fetch_assoc(mysql_query("SELECT COUNT(`id`) as `total` FROM `z_vouchers` WHERE `selfCreated` = 1"));			
+				}	
+						
+				//Form
+				$pdf->SetFont('helvetica','B',16);
+				$pdf->Ln(3);		
+				$pdf->Cell(185,10, "VOUCHER SUMMARY",50,80,'R');
+				$pdf->Ln(1);
+				$pdf->SetFont('times','',15);
+				$pdf->Cell(185,0,'Zaitoon Restaurant',105,80,'R');
+				$pdf->Ln(5);
+				$pdf->Image('images/small_logo_black.png',10,10,60);
+				$pdf->Ln(29);
+				$pdf->SetFont('helvetica','',11);			
+
+				if(!$f_isDatewise){
+					$pdf->SetY(33);
+					$pdf->SetX(10);
+					$pdf->SetFont('helvetica','', 9);
+					$pdf->Cell(120,0,"Period");
+					$pdf->SetX(60);
+					$pdf->SetFont('helvetica','B', 10);
+					$pdf->Cell(120,0, ': All Time');
+								
+					$pdf->Ln(5);
+					$pdf->SetX(10);
+					$pdf->SetFont('helvetica','', 9);
+					$pdf->Cell(120,0,"Number of Vouchers");
+					$pdf->SetX(60);
+					$pdf->SetFont('helvetica','B', 10);
+					$pdf->Cell(120,0, $totalVouchers['total'] != ''? ": ".$totalVouchers['total'] : ": 0");
+					
+					$pdf->Ln(5);
+					$pdf->SetFont('helvetica','', 9);
+					$pdf->Cell(120,0,"Active Vouchers");
+					$pdf->SetX(60);
+					$pdf->SetFont('helvetica','B', 10);
+					$pdf->Cell(120,0, $totalActiveVouchers['total'] !='' ? ": ".$totalActiveVouchers['total'] : ": 0");
+					
+					$pdf->Ln(5);
+					$pdf->SetFont('helvetica','', 9);
+					$pdf->Cell(120,0,"Redeemed Vouchers");
+					$pdf->SetX(60);
+					$pdf->SetFont('helvetica','B', 10);
+					$pdf->Cell(120,0, $totalUsedVouchers['total'] !='' ? ": ".$totalUsedVouchers['total'] : ": 0");
+	
+					$pdf->Ln(5);
+					$pdf->SetFont('helvetica','', 9);
+					$pdf->Cell(120,0,"User Generated Vouchers");				
+					$pdf->SetX(60);
+					$pdf->SetFont('helvetica','B', 10);
+					$pdf->Cell(120,0, $totalSelfVouchers['total'] != ''? ": ".$totalSelfVouchers['total'] : ": 0");
+					$pdf->SetY(60);
+					$pdf->SetFont('helvetica','B',13);
+					$pdf->Cell(180,0, "Voucher Details",100,80,'L');
+					$pdf->SetFont('helvetica','',11);
+					$pdf->SetY(62);
+					$pdf->SetFont('helvetica','',10.5);
+					$pdf->Cell(180,0,"__________________________________________________________________________________________");
+					$pre = 68;
+				}
+				else{	
+					$pdf->SetY(40);
+					$pdf->SetFont('helvetica','B',13);
+					$pdf->Cell(180,0,"Vouchers Generated during ".date("d-m-Y",  strtotime($f_query_date))." and ".date("d-m-Y", strtotime($f_max_to_date)),100,80,'L');
+					$pdf->SetFont('helvetica','',11);
+					$pdf->SetY(42);
+					$pdf->SetFont('helvetica','',10.5);
+					$pdf->Cell(180,0,"__________________________________________________________________________________________");
+					$pre = 48;
+				}
+	
+								
+				
+				$pdf->SetY($pre);
+							
+				$pdf->SetFont('helvetica','B',8);
+				$pdf->Cell(120,0,"Sl.");
+				$pdf->SetX(20);
+				$pdf->Cell(120,0,"Voucher");
+				$pdf->SetX(50);
+				$pdf->Cell(120,0,"Date");
+				$pdf->SetX(70);
+				$pdf->Cell(120,0,"Value");
+				$pdf->SetX(90);
+				$pdf->Cell(140,0,"Expiry");
+				$pdf->SetX(110);
+				$pdf->Cell(140,0,"Issued To");
+				$pdf->SetX(140);
+				$pdf->Cell(140,0,"Generated By");
+				$pdf->SetX(170);
+				$pdf->Cell(140,0,"Status");																											
+				
+				$pdf->Ln(2);
+				$pdf->SetFont('helvetica','',10.5);
+				$pdf->Cell(180,0,"__________________________________________________________________________________________");
+				$pre = $pre + 9;
+				$pdf->SetY($pre);				
+				
+				
+													
+
+			if(!$f_isDatewise){
+				$query = mysql_query("SELECT * FROM `z_vouchers` WHERE 1");
+			}
+			else{
+				$query_stamp_from = date("Ymd", strtotime($f_query_date));
+				$query_stamp_to = date("Ymd", strtotime($f_max_to_date));			
+				$query = mysql_query("SELECT * FROM `z_vouchers` WHERE `createdDate` >= '{$query_stamp_from}' AND `createdDate` <= '{$query_stamp_to}'");
+			}
+			
+			
+			$n = 0;
+			while($info = mysql_fetch_assoc($query)){					
+				$n++;
+				
+				$admin_check = mysql_fetch_assoc(mysql_query("SELECT `name` FROM `z_roles` WHERE `code`='{$info['adminUser']}'"));
+				
+				$status = "Active";				
+				if($info['usedOrder'] != ''){
+					$status = "Used on #".$info['usedOrder'];
+				}
+				else{
+					if($info['isActive'] == 0){
+						$status = "Inactive";
+					}
+				}
+				
+				
+				$pdf->SetFont('helvetica','',8);
+				$pdf->Cell(120,0, $n.".");
+				$pdf->SetX(20);
+				$pdf->Cell(120,0, $info['code']);
+				$pdf->SetX(50);
+				$pdf->Cell(120,0, date('d-m-Y', strtotime($info['createdDate'])));
+				$pdf->SetX(70);
+				$pdf->Cell(140,0, "Rs. ".$info['value']);
+				$pdf->SetX(90);
+				$pdf->Cell(100,0, date('d-m-Y', strtotime($info['expiry'])));
+				$pdf->SetX(110);								
+				$pdf->Cell(120,0, $info['userRestriction']);
+				$pdf->SetX(140);								
+				$pdf->Cell(120,0, $info['selfCreated'] == 0? $admin_check['name'] : "User");
+				$pdf->SetX(170);								
+				$pdf->Cell(120,0, $status);
+				
+
+
+				$pdf->Ln(8);
+				
+				//First Round
+				if($n%25 == 0){
+					$pdf->AddPage();
+					
+					$pdf->SetY(15);
+					$pdf->SetFont('helvetica','B',13);
+					$pdf->Cell(180,0,"Voucher Details" ,100,80,'L');
+					$pdf->SetFont('helvetica','',11);
+	
+					$pdf->SetY(17);
+					$pdf->SetFont('helvetica','',10.5);
+					$pdf->Cell(180,0,"__________________________________________________________________________________________");
+									
+
+					$pdf->SetY(22);
+					
+													
+					$pdf->SetFont('helvetica','B',9);
+					$pdf->Cell(120,0,"Sl.");
+					$pdf->SetX(20);
+					$pdf->Cell(120,0,"Voucher");
+					$pdf->SetX(50);
+					$pdf->Cell(120,0,"Date");
+					$pdf->SetX(70);
+					$pdf->Cell(120,0,"Value");
+					$pdf->SetX(90);
+					$pdf->Cell(140,0,"Expiry");
+					$pdf->SetX(110);
+					$pdf->Cell(140,0,"Issued To");
+					$pdf->SetX(140);
+					$pdf->Cell(140,0,"Generated By");
+					$pdf->SetX(170);
+					$pdf->Cell(140,0,"Status");						
+						
+							
+					
+					$pdf->Ln(2);
+					$pdf->SetFont('helvetica','',10.5);
+					$pdf->Cell(180,0,"__________________________________________________________________________________________");
+					$pdf->Ln(8);
+				}			
+											
+				
+			}		
+	
+	if($n == 0){
+		die('<br><br><center><p style="font-size:21px; color: #e74c3c">Summary can not be generated because, vouchers has not been used.</p><a href="https://www.zaitoon.online/manager/vouchers.html">BACK</a></center>');	
+	}					
+							
+	$pdf->Output('VoucherSummary_Zaitoon.pdf', 'I');			
+		
+} //End of Function
+
+
+		
+
+	$isSuccess = false;
+	
+	//Date wise filter
+	$isDatewise = false;
+	if(isset($_GET['from']) && $_GET['from'] != ''){
+		$query_date = $_GET['from'];
+		$isDatewise = true;
+	}
+	else{
+		$isDatewise = false;
+	}
+					
+	if(isset($_GET['to']) && $_GET['to'] != ''){
+		$max_to_date = $_GET['to'];
+	}
+	else{
+		$max_to_date = date('Y-m-d');
+	}
+		
+	$isSuccess = true;
+	generateSummary($isDatewise, $query_date, $max_to_date);
+
+
+
+	if(!$isSuccess){
+		die('<br><br><center><p style="font-size:21px; color: #e74c3c">Missing Values - Summary can not be generated.</p><a href="https://www.zaitoon.online/manager/vouchers.html">BACK</a></center>');	
+	}
+										
+?>
