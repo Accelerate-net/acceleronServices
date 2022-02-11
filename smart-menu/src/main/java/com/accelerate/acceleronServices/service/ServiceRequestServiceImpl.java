@@ -7,7 +7,9 @@ import com.accelerate.acceleronServices.enums.StatusTextEnum;
 import com.accelerate.acceleronServices.repository.ServiceRequestRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -17,6 +19,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     private ServiceRequestRepository serviceRequestRepository;
 
     @Override
+    @Transactional
     public ApiResponse<GenericResponse> updateServiceRequest(UpdateServiceRequestDto request) {
 
         serviceRequestRepository.updateStatus(request.getRequestId(), request.getStatus());

@@ -5,5 +5,5 @@ import com.accelerate.acceleronServices.dto.response.ApiResponse;
 import com.accelerate.acceleronServices.dto.response.GenericResponse;
 
 public interface ServiceRequestService {
-    public ApiResponse<GenericResponse> updateServiceRequest(UpdateServiceRequestDto request);
+    ApiResponse<GenericResponse> updateServiceRequest(UpdateServiceRequestDto request);
 }

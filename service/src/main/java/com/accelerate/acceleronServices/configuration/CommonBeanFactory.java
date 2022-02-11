@@ -2,6 +2,7 @@ package com.accelerate.acceleronServices.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletRegistrationBean;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -11,7 +12,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 @Configuration
 @Slf4j
-public class BeanFactory {
+public class CommonBeanFactory {
 
     public static final String APP_ROOT = "/acceleron-services";
 
@@ -26,6 +27,11 @@ public class BeanFactory {
         servletRegistrationBean.setName("AcceleronApi");
         servletRegistrationBean.setLoadOnStartup(1);
         return servletRegistrationBean;
+    }
+
+    @Bean
+    public DispatcherServlet dispatcherServlet() {
+        return new DispatcherServlet();
     }
 
     @Bean
