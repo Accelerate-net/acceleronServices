@@ -8,6 +8,7 @@ import com.accelerate.acceleronServices.repository.ServiceRequestRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,10 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         serviceRequestRepository.updateStatus(request.getRequestId(), request.getStatus());
 
         ApiResponse<GenericResponse> response = new ApiResponse<>();
-        response.setData(new GenericResponse(StatusTextEnum.SUCCESS.name()));
+        response.setStatus(true);
+        response.setMessage(StatusTextEnum.SUCCESS.value());
+        response.setStatusCode(HttpStatus.OK.value());
+        response.setData(new GenericResponse(StatusTextEnum.SUCCESS.value()));
         return response;
     }
 }
