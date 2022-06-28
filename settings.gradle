@@ -1,3 +1,4 @@
 rootProject.name = 'AcceleronServices'
 include 'service'
 include 'smart-menu'
+include 'reservation'
