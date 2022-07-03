@@ -45,8 +45,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @Slf4j
 @EnableAsync
 @EnableCaching
-@EntityScan("com.accelerate.acceleronServices.model")
-@EnableJpaRepositories("com.accelerate.acceleronServices.repository")
+@EntityScan(basePackages= {"com.accelerate.acceleronServices.reservation.model","com.accelerate.acceleronServices.smartMenu.model"})
+@EnableJpaRepositories(basePackages = {"com.accelerate.acceleronServices.reservation.repository","com.accelerate.acceleronServices.smartMenu.repository"})
 public class Launcher extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
