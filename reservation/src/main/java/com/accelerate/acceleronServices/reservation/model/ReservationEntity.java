@@ -13,16 +13,62 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "reservation")
+@Table(name = "z_reservations")
 public class ReservationEntity {
     @Id
     @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    String name;
+    int id;
 
-    @Column(name = "mobile_no")
     @NotNull
+    String stamp;
+
+    @NotNull
+    @Column(columnDefinition = "integer default 0")
+    int status;
+
+    @NotNull
+    @Column(name = "userId")
     String mobileNo;
+
+    @NotNull
+    @Column(name = "userName")
+    String userName;
+
+
+    @Column(name = "userEmail")
+    String userEmail;
+
+    @NotNull
+    String outlet;
+
+    @NotNull
+    @Column(name = "channel")
+    String channel;
+
+    @NotNull
+    String date;
+
+    @NotNull
+    String time;
+
+    @NotNull
+    String count;
+
+    @NotNull
+    @Column
+    String comments;
+
+
+
+    @Column(name ="isBirthday" ,columnDefinition = "integer default 0")
+    int isBirthday;
+
+    @NotNull
+    @Column(name = "isAnniversary",columnDefinition = "integer default 0")
+    int isAnniversary;
+
+
 
 
     /*

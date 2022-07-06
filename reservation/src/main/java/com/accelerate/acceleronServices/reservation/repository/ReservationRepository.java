@@ -13,28 +13,29 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Integer> {
 
-    //ReservationEntity findById(int requestId);
+    @Modifying
+    @Query(value = "insert into z_reservations" +
+            " (stamp, userId, userName, userEmail, outlet, channel, date, time, count, comments, isBirthday, isAnniversary)" +
+            " VALUES (?1, ?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12)", nativeQuery = true)
+    void makeReservation(String stamp,String mobileNo, String userName, String userEmail, String outlet, String channel,
+                         String date, String time, String count, String comments, int isBirthday, int isAnniversary);
 
     @Modifying
-    @Query(value = "insert into reservation (name, mobile_no) VALUES (?1, ?2)", nativeQuery = true)
-    void makeReservation(String name, String mobileNo);
+    @Query(value = "select * from z_reservations limit ?1 offset ?2", nativeQuery = true)
+    List<ReservationEntity> findAllById(Integer limit, Integer skip);
 
-    //@Modifying
-    @Query(value = "select * from reservation", nativeQuery = true)
-    List<ReservationEntity> findAll();
+    @Modifying
+    @Query(value = "select * from" +
+            " (select * from z_reservations where (userName like concat('%',?1,'%') or userEmail like concat('%',?1,'%')" +
+            " or userId like concat('%',?1,'%'))) as search_result limit ?2 offset ?3", nativeQuery = true)
+    List<ReservationEntity> findByGivenString(String search, Integer limit, Integer skip);
 
-
-    //@Query("FROM #{#entityName} where name = ?1")
-    @Query(value = "select * from reservation where name = :name", nativeQuery = true)
-    List<ReservationEntity> findByName(@Param("name") String name);
-
+    /*
     @Modifying
     @Transactional
-    @Query(value = "delete from reservation where name = :name", nativeQuery = true)
-    void deleteByName(@Param("name") String name);
+    @Query(value = "update ", nativeQuery = true)
+    void updateReservation(String stamp,String mobileNo, String userName, String userEmail, String outlet, String channel,
+                           String date, String time, String count, String comments, int isBirthday, int isAnniversary);
 
-    @Transactional
-    @Modifying
-    @Query(value = "UPDATE reservation r SET r.mobile_no = ?2 WHERE r.name = ?1", nativeQuery = true)
-    void updateReservation(String name, String mobileNo);
+    */
 }
