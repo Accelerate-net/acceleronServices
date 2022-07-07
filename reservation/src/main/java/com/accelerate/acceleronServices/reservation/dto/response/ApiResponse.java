@@ -24,6 +24,14 @@ public class ApiResponse<T> {
 		response.setStatusCode(HttpStatus.BAD_REQUEST.value());
 		response.setData(new GenericResponse(StatusTextEnum.FAILURE.value()));
 		return response;
+	}
 
+	public ApiResponse<GenericResponse> successResponse(String message){
+		ApiResponse<GenericResponse> response = new ApiResponse<>();
+		response.setStatus(true);
+		response.setMessage(message);
+		response.setStatusCode(HttpStatus.OK.value());
+		response.setData(new GenericResponse(StatusTextEnum.SUCCESS.value()));
+		return response;
 	}
 }

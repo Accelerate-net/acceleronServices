@@ -1,5 +1,6 @@
 package com.accelerate.acceleronServices.reservation.repository;
 
+import com.accelerate.acceleronServices.reservation.dto.request.ReservationRequestDto;
 import com.accelerate.acceleronServices.reservation.model.ReservationEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,12 +14,6 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Integer> {
 
-    @Modifying
-    @Query(value = "insert into z_reservations" +
-            " (stamp, userId, userName, userEmail, outlet, channel, date, time, count, comments, isBirthday, isAnniversary)" +
-            " VALUES (?1, ?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12)", nativeQuery = true)
-    void makeReservation(String stamp,String mobileNo, String userName, String userEmail, String outlet, String channel,
-                         String date, String time, String count, String comments, int isBirthday, int isAnniversary);
 
     @Modifying
     @Query(value = "select * from z_reservations limit ?1 offset ?2", nativeQuery = true)
@@ -30,12 +25,4 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
             " or userId like concat('%',?1,'%'))) as search_result limit ?2 offset ?3", nativeQuery = true)
     List<ReservationEntity> findByGivenString(String search, Integer limit, Integer skip);
 
-    /*
-    @Modifying
-    @Transactional
-    @Query(value = "update ", nativeQuery = true)
-    void updateReservation(String stamp,String mobileNo, String userName, String userEmail, String outlet, String channel,
-                           String date, String time, String count, String comments, int isBirthday, int isAnniversary);
-
-    */
 }

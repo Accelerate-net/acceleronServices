@@ -1,6 +1,8 @@
 package com.accelerate.acceleronServices.configuration.launcher;
 
+import com.accelerate.acceleronServices.reservation.utils.EntityDtoConversion;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,10 +17,7 @@ import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguratio
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
@@ -48,6 +47,17 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EntityScan(basePackages= {"com.accelerate.acceleronServices.reservation.model","com.accelerate.acceleronServices.smartMenu.model"})
 @EnableJpaRepositories(basePackages = {"com.accelerate.acceleronServices.reservation.repository","com.accelerate.acceleronServices.smartMenu.repository"})
 public class Launcher extends SpringBootServletInitializer {
+
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
+	}
+
+	@Bean
+	public EntityDtoConversion entityDtoConversion(){
+		return new EntityDtoConversion();
+	}
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(Launcher.class, args);

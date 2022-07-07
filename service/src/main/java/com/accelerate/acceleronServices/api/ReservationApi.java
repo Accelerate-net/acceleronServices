@@ -1,11 +1,11 @@
 package com.accelerate.acceleronServices.api;
 
 
-
-import com.accelerate.acceleronServices.reservation.dto.request.ReservationDto;
+import com.accelerate.acceleronServices.common.ErrorConstants;
+import com.accelerate.acceleronServices.common.Utils;
+import com.accelerate.acceleronServices.reservation.dto.request.ReservationRequestDto;
 import com.accelerate.acceleronServices.reservation.dto.response.ApiResponse;
 import com.accelerate.acceleronServices.reservation.dto.response.GenericResponse;
-import com.accelerate.acceleronServices.reservation.enums.StatusTextEnum;
 import com.accelerate.acceleronServices.reservation.model.ReservationEntity;
 import com.accelerate.acceleronServices.reservation.service.ReservationRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/reservation")
@@ -26,48 +25,40 @@ public class ReservationApi {
     @Autowired
     private ReservationRequestService reservationRequestService;
 
+
+
     @PostMapping()
-    public ResponseEntity<?> makeReservation(@RequestBody ReservationDto request) throws ParseException {
+    public ResponseEntity<?> makeReservation(@RequestBody ReservationRequestDto request) throws ParseException {
+
+        String errorMessage = "";
 
         //Verifying userName
-        if(request.getUserName() == null || request.getUserName().length() == 0){
-            return ResponseEntity.badRequest().body(new ApiResponse<>().badRequestResponse("Please provide your name"));
-        }
+        if(!Utils.isValidUserName(request.getUserName())){
+            errorMessage = ErrorConstants.userNameInvalidError;
 
-        //Verifying mobileNo
-        if(request.getMobileNo() == null||request.getMobileNo().length() < 10){
-            return ResponseEntity.badRequest().body(new ApiResponse<>().badRequestResponse("Mobile number is empty or invalid"));
-        }
+        //Verfying mobileNo
+        } else if (!Utils.isValidMobileNo(request.getMobileNo())) {
+            errorMessage = ErrorConstants.mobileNoInvalidError;
 
-
-        //verifying outlet
-        if(request.getOutlet() == null || request.getOutlet().length()==0){
-            return ResponseEntity.badRequest().body(new ApiResponse<>().badRequestResponse("Please select the outlet"));
-        }
+        //Verifying outlet
+        } else if (!Utils.isValidOutlet(request.getOutlet())) {
+            errorMessage = ErrorConstants.outletInvalidError;
 
         //verifying date
-        if(request.getDate() == null){
-            return ResponseEntity.badRequest().body(new ApiResponse<>().badRequestResponse("Please provide date"));
-        }
+        } else if (!Utils.isValidDate(request.getDate())) {
+            errorMessage = ErrorConstants.dateInvalidError;
 
         //verifying time
-        if(request.getTime() == null){
-            return ResponseEntity.badRequest().body(new ApiResponse<>().badRequestResponse("Please provide time"));
+        } else if (!Utils.isValidtime(request.getTime())) {
+            errorMessage = ErrorConstants.timeInvalidError;
+
+        //verifying count
+        } else if (!Utils.isValidCount(request.getCount())) {
+            errorMessage = ErrorConstants.countInvalidError;
         }
-
-        //verifying count details
-        try {
-            if (Integer.parseInt(request.getCount()) > 30) {
-                return ResponseEntity.badRequest().body(new ApiResponse<>().badRequestResponse("Maximum seats we can reserve at a time is 30. Contact us for Party Arrangements."));
-            }
+        if(!errorMessage.equals("")){
+            return ResponseEntity.badRequest().body(new ApiResponse<>().badRequestResponse(errorMessage));
         }
-        catch (Exception e){
-            return ResponseEntity.badRequest().body(new ApiResponse<>().badRequestResponse("Please provide a valid count"));
-        }
-
-        //verifying isBirthday
-
-
 
 
         ApiResponse<GenericResponse> response = reservationRequestService.makeReservation(request);
@@ -92,14 +83,12 @@ public class ReservationApi {
         return ResponseEntity.ok().body(response);
 
     }
-
-    /*
-    @PutMapping()
-    public ResponseEntity<?> updateReservation(@RequestBody ReservationDto request){
-        ApiResponse<GenericResponse> response = reservationService.updateReservation(request);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateReservation(@PathVariable int id,@RequestBody ReservationRequestDto request){
+        ApiResponse<GenericResponse> response = reservationRequestService.updateReservation(id,request);
         return ResponseEntity.ok().body(response);
 
     }
-     */
+
 
 }

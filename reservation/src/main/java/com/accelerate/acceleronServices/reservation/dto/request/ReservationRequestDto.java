@@ -1,5 +1,7 @@
 package com.accelerate.acceleronServices.reservation.dto.request;
 
+import com.accelerate.acceleronServices.reservation.model.ReservationEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,8 @@ import java.util.Objects;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReservationDto {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ReservationRequestDto {
     public String channel;
     public String userName;
     public String userEmail;
@@ -48,10 +51,5 @@ public class ReservationDto {
         }
         return 0;
     }
-
-
-
-
-
 
 }

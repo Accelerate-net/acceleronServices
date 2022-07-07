@@ -1,9 +1,11 @@
 package com.accelerate.acceleronServices.reservation.model;
 
+import com.accelerate.acceleronServices.reservation.dto.request.ReservationRequestDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+//import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -67,6 +69,7 @@ public class ReservationEntity {
     @NotNull
     @Column(name = "isAnniversary",columnDefinition = "integer default 0")
     int isAnniversary;
+
 
 
 

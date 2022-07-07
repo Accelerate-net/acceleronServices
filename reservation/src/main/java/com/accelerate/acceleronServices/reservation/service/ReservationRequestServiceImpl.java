@@ -1,11 +1,12 @@
 package com.accelerate.acceleronServices.reservation.service;
 
-import com.accelerate.acceleronServices.reservation.dto.request.ReservationDto;
+import com.accelerate.acceleronServices.reservation.dto.request.ReservationRequestDto;
 import com.accelerate.acceleronServices.reservation.dto.response.ApiResponse;
 import com.accelerate.acceleronServices.reservation.dto.response.GenericResponse;
 import com.accelerate.acceleronServices.reservation.enums.StatusTextEnum;
 import com.accelerate.acceleronServices.reservation.model.ReservationEntity;
 import com.accelerate.acceleronServices.reservation.repository.ReservationRepository;
+import com.accelerate.acceleronServices.reservation.utils.EntityDtoConversion;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,34 +25,31 @@ public class ReservationRequestServiceImpl implements ReservationRequestService 
     @Autowired
     private ReservationRepository reservationRepository;
 
+    @Autowired
+    private EntityDtoConversion entityDtoConversion;
+
     @Override
     @Transactional
-    public ApiResponse<GenericResponse> makeReservation(ReservationDto request) {
-        reservationRepository.makeReservation(request.getStamp(),request.getMobileNo(), request.getUserName(),
-                request.getUserEmail(), request.getOutlet(), request.getChannel(), request.getDate(),
-                request.getTime(), request.getCount(), request.getComments(), request.getIsBirthday(), request.getIsAnniversary());
+    public ApiResponse<GenericResponse> makeReservation(ReservationRequestDto request) {
 
-        ApiResponse<GenericResponse> response = new ApiResponse<>();
-        response.setStatus(true);
-        response.setMessage(StatusTextEnum.SUCCESS.value());
-        response.setStatusCode(HttpStatus.OK.value());
-        response.setData(new GenericResponse(StatusTextEnum.SUCCESS.value()));
-        return response;
+        reservationRepository.save(entityDtoConversion.convertToEntity(request));
+
+        return new ApiResponse<>().successResponse("Success");
+
     }
-
     @Override
     public List<ReservationEntity> getAllReservation(String search, Integer limit, Integer skip){
 
-        if(search==null) {
+        if(search==null) {  //search is not provided
             if (limit == null && skip == null) {
-                return reservationRepository.findAll();
+                return reservationRepository.findAll();  //return all table rows
             }
             if (limit != null && skip == null) {
-                return reservationRepository.findAllById(limit, 0);
+                return reservationRepository.findAllById(limit, 0);  //returns first x rows where x=limit
             }
-            return reservationRepository.findAllById(limit, limit);
+            return reservationRepository.findAllById(limit, skip);
         }
-        else{
+        else{  //search is provided
             if(skip==null){
                 skip=0;
             }
@@ -69,28 +66,25 @@ public class ReservationRequestServiceImpl implements ReservationRequestService 
 
     @Override
     public ApiResponse<GenericResponse> deleteReservation(int id) {
+
         reservationRepository.deleteById(id);
-
-
-        ApiResponse<GenericResponse> response = new ApiResponse<>();
-        response.setStatus(true);
-        response.setMessage("Deleted");
-        response.setStatusCode(HttpStatus.OK.value());
-        response.setData(new GenericResponse(StatusTextEnum.SUCCESS.value()));
-        return response;
+        return new ApiResponse<>().successResponse("Deleted");
     }
 
-    /*
+
     @Override
-    public ApiResponse<GenericResponse> updateReservation(ReservationDto request, int id) {
-        reservationRepository.updateReservation(request.getName(), request.getMobileNo());
+    public ApiResponse<GenericResponse> updateReservation(int id, ReservationRequestDto request) {
 
-        ApiResponse<GenericResponse> response = new ApiResponse<>();
-        response.setStatus(true);
-        response.setMessage("Updated your reservation.");
-        response.setStatusCode(HttpStatus.OK.value());
-        response.setData(new GenericResponse(StatusTextEnum.SUCCESS.value()));
-        return response;
+        ReservationEntity requestEntity = entityDtoConversion.convertToEntity(request);
+        Optional<ReservationEntity> reservationEntity = reservationRepository.findById(id);
+
+        if(reservationEntity.isPresent()){
+            requestEntity.setId(reservationEntity.get().getId());
+            reservationRepository.save(requestEntity);
+            return new ApiResponse<>().successResponse("Updated your reservation");
+        }
+        else{ //if the id is not present
+            return new ApiResponse<>().successResponse("The given id doesn't exist");
+        }
     }
-     */
 }
