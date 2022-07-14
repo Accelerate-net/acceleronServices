@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
@@ -28,41 +29,13 @@ public class ReservationApi {
 
 
     @PostMapping()
-    public ResponseEntity<?> makeReservation(@RequestBody ReservationRequestDto request) throws ParseException {
-
-        String errorMessage = "";
-
-        //Verifying userName
-        if(!Utils.isValidUserName(request.getUserName())){
-            errorMessage = ErrorConstants.userNameInvalidError;
-
-        //Verfying mobileNo
-        } else if (!Utils.isValidMobileNo(request.getMobileNo())) {
-            errorMessage = ErrorConstants.mobileNoInvalidError;
-
-        //Verifying outlet
-        } else if (!Utils.isValidOutlet(request.getOutlet())) {
-            errorMessage = ErrorConstants.outletInvalidError;
-
-        //verifying date
-        } else if (!Utils.isValidDate(request.getDate())) {
-            errorMessage = ErrorConstants.dateInvalidError;
-
-        //verifying time
-        } else if (!Utils.isValidtime(request.getTime())) {
-            errorMessage = ErrorConstants.timeInvalidError;
-
-        //verifying count
-        } else if (!Utils.isValidCount(request.getCount())) {
-            errorMessage = ErrorConstants.countInvalidError;
-        }
-        if(!errorMessage.equals("")){
-            return ResponseEntity.badRequest().body(new ApiResponse<>().badRequestResponse(errorMessage));
-        }
-
-
+    public ResponseEntity<?> makeReservation(@RequestBody @Valid ReservationRequestDto request) {
+        
         ApiResponse<GenericResponse> response = reservationRequestService.makeReservation(request);
-        return ResponseEntity.ok().body(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        //return ResponseEntity.ok().body(response);
+
+
     }
 
     @GetMapping
@@ -70,11 +43,16 @@ public class ReservationApi {
         return new ResponseEntity<List<ReservationEntity>>(reservationRequestService.getAllReservation(search, limit,skip), HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<ReservationEntity>> getAllReservationBySearch(@RequestParam String search,@RequestParam(required = false) Integer limit){
+        return new ResponseEntity<List<ReservationEntity>>(reservationRequestService.getAllReservationBySearch(search, limit), HttpStatus.OK);
+    }
+
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<ReservationEntity>> getReservationById(@PathVariable int id){
-        return new ResponseEntity<Optional<ReservationEntity>>(reservationRequestService.getReservationById(id), HttpStatus.OK);
+    public ResponseEntity<ReservationEntity> getReservationById(@PathVariable int id){
+        return new ResponseEntity<ReservationEntity>(reservationRequestService.getReservationById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

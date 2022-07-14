@@ -14,6 +14,8 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Integer> {
 
+    ReservationEntity findById(int id);
+
 
     @Modifying
     @Query(value = "select * from z_reservations limit ?1 offset ?2", nativeQuery = true)

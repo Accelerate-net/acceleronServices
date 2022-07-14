@@ -10,11 +10,12 @@ public class EntityDtoConversion {
     @Autowired
     private ModelMapper modelMapper;
 
-    public ReservationEntity convertToEntity(ReservationRequestDto reservationRequestDto){
-        return modelMapper.map(reservationRequestDto, ReservationEntity.class);
+    public <T> ReservationEntity convertToEntity(T dto){
+
+        return modelMapper.map(dto, ReservationEntity.class);
     }
 
-    public ReservationRequestDto convertToDto(ReservationEntity reservationEntity){
-        return modelMapper.map(reservationEntity, ReservationRequestDto.class);
+    public <T> ReservationRequestDto convertToDto(T entity){
+        return modelMapper.map(entity, ReservationRequestDto.class);
     }
 }

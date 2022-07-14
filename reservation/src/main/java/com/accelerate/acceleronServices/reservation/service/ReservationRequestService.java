@@ -14,11 +14,12 @@ public interface ReservationRequestService {
 
     List<ReservationEntity> getAllReservation(String search, Integer limit, Integer skip);
 
-    Optional<ReservationEntity> getReservationById(int id);
+    ReservationEntity getReservationById(int id);
 
     ApiResponse<GenericResponse> deleteReservation(int id);
 
     ApiResponse<GenericResponse> updateReservation(int id, ReservationRequestDto request);
 
 
+    List<ReservationEntity> getAllReservationBySearch(String search, Integer limit);
 }
