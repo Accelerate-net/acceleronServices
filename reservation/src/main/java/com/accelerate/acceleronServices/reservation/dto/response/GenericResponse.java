@@ -1,4 +1,4 @@
-package com.accelerate.acceleronServices.dto.response;
+package com.accelerate.acceleronServices.reservation.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

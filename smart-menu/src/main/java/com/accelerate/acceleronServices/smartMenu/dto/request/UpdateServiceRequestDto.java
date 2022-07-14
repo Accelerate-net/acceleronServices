@@ -1,4 +1,4 @@
-package com.accelerate.acceleronServices.dto.request;
+package com.accelerate.acceleronServices.smartMenu.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

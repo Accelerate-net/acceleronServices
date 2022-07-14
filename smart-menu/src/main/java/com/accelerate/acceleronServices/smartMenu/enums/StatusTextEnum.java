@@ -1,4 +1,4 @@
-package com.accelerate.acceleronServices.enums;
+package com.accelerate.acceleronServices.smartMenu.enums;
 
 public enum StatusTextEnum {
     SUCCESS("success"),

@@ -1,4 +1,4 @@
-package com.accelerate.acceleronServices.utils;
+package com.accelerate.acceleronServices.reservation.utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommonUtil {
+public class CommonUtilReservation {
 
     public String convertDateToDatestamp(String date) {
         Pattern regex = Pattern.compile("^(\\d\\d)-(\\d\\d)-(\\d\\d\\d\\d)$");

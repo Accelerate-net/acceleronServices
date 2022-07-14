@@ -1,4 +1,4 @@
-package com.accelerate.acceleronServices.utils;
+package com.accelerate.acceleronServices.reservation.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-public class ValidationUtil {
+public class ValidationUtilReservation {
 
     private static final String DATE_FORMAT = "^([0-2][0-9]||3[0-1])-(0[0-9]||1[0-2])-([0-9][0-9])?[0-9][0-9]$";
 

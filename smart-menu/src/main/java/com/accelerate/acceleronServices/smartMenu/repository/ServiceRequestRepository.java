@@ -1,6 +1,6 @@
-package com.accelerate.acceleronServices.repository;
+package com.accelerate.acceleronServices.smartMenu.repository;
 
-import com.accelerate.acceleronServices.model.ServiceRequestEntity;
+import com.accelerate.acceleronServices.smartMenu.model.ServiceRequestEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

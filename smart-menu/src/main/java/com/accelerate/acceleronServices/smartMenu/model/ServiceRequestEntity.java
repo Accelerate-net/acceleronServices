@@ -1,4 +1,4 @@
-package com.accelerate.acceleronServices.model;
+package com.accelerate.acceleronServices.smartMenu.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

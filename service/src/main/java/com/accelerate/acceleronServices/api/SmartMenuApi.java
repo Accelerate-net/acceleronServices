@@ -1,9 +1,9 @@
 package com.accelerate.acceleronServices.api;
 
-import com.accelerate.acceleronServices.dto.request.UpdateServiceRequestDto;
-import com.accelerate.acceleronServices.dto.response.ApiResponse;
-import com.accelerate.acceleronServices.dto.response.GenericResponse;
-import com.accelerate.acceleronServices.service.ServiceRequestService;
+import com.accelerate.acceleronServices.smartMenu.dto.request.UpdateServiceRequestDto;
+import com.accelerate.acceleronServices.smartMenu.dto.response.ApiResponse;
+import com.accelerate.acceleronServices.smartMenu.dto.response.GenericResponse;
+import com.accelerate.acceleronServices.smartMenu.service.ServiceRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

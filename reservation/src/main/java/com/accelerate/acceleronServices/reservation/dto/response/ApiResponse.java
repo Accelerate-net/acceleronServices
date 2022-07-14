@@ -1,9 +1,11 @@
-package com.accelerate.acceleronServices.dto.response;
+package com.accelerate.acceleronServices.reservation.dto.response;
 
+import com.accelerate.acceleronServices.reservation.enums.StatusTextEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @Data
 @NoArgsConstructor
@@ -14,4 +16,5 @@ public class ApiResponse<T> {
 	int statusCode;
 	String message;
 	T data;
+
 }

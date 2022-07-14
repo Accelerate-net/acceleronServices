@@ -1,13 +1,12 @@
-package com.accelerate.acceleronServices.service;
+package com.accelerate.acceleronServices.smartMenu.service;
 
-import com.accelerate.acceleronServices.dto.request.UpdateServiceRequestDto;
-import com.accelerate.acceleronServices.dto.response.ApiResponse;
-import com.accelerate.acceleronServices.dto.response.GenericResponse;
-import com.accelerate.acceleronServices.enums.StatusTextEnum;
-import com.accelerate.acceleronServices.repository.ServiceRequestRepository;
+import com.accelerate.acceleronServices.smartMenu.dto.request.UpdateServiceRequestDto;
+import com.accelerate.acceleronServices.smartMenu.dto.response.ApiResponse;
+import com.accelerate.acceleronServices.smartMenu.dto.response.GenericResponse;
+import com.accelerate.acceleronServices.smartMenu.enums.StatusTextEnum;
+import com.accelerate.acceleronServices.smartMenu.repository.ServiceRequestRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
