@@ -48,15 +48,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableJpaRepositories(basePackages = {"com.accelerate.acceleronServices.reservation.repository","com.accelerate.acceleronServices.smartMenu.repository"})
 public class Launcher extends SpringBootServletInitializer {
 
-	@Bean
-	public ModelMapper modelMapper() {
-		return new ModelMapper();
-	}
-
-	@Bean
-	public EntityDtoConversion entityDtoConversion(){
-		return new EntityDtoConversion();
-	}
 
 
 	public static void main(String[] args) {

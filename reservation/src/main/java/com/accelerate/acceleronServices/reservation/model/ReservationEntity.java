@@ -70,6 +70,10 @@ public class ReservationEntity {
     @Column(name = "isAnniversary",columnDefinition = "integer default 0")
     int isAnniversary;
 
+    @NotNull
+    @Column(name = "isDeleted", columnDefinition = "integer default 0")
+    int isDeleted;
+
 
 
 

@@ -4,15 +4,15 @@ import com.accelerate.acceleronServices.reservation.dto.request.ReservationReque
 import com.accelerate.acceleronServices.reservation.dto.response.ApiResponse;
 import com.accelerate.acceleronServices.reservation.dto.response.GenericResponse;
 import com.accelerate.acceleronServices.reservation.model.ReservationEntity;
+import com.accelerate.acceleronServices.reservation.model.ReservationSummary;
 
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ReservationRequestService {
     ApiResponse<GenericResponse> makeReservation(ReservationRequestDto request);
 
-    List<ReservationEntity> getAllReservation(String search, Integer limit, Integer skip);
+    List<ReservationEntity> getAllReservation(Integer limit, Integer skip);
 
     ReservationEntity getReservationById(int id);
 
@@ -22,4 +22,12 @@ public interface ReservationRequestService {
 
 
     List<ReservationEntity> getAllReservationBySearch(String search, Integer limit);
+
+    ApiResponse<GenericResponse> updateStatus(int id, String status);
+
+    ReservationSummary getReservationSummaryByUserId(String userId);
+
+    ReservationSummary getReservationSummaryPerBranch(String outlet, String date);
+
+
 }

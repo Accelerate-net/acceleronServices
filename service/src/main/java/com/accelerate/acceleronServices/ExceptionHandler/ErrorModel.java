@@ -9,6 +9,7 @@ public class ErrorModel {
 
     private HttpStatus httpStatus;
 
+
     private String timestamp;
 
     private String message;
@@ -25,6 +26,7 @@ public class ErrorModel {
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }
+
 
     public String getTimestamp() {
         return timestamp;

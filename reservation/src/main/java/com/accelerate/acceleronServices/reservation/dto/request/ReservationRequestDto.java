@@ -6,9 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.util.Objects;
 
 @Data
@@ -37,6 +35,8 @@ public class ReservationRequestDto {
 
 
     @Max(value = 30, message = "Maximum seats we can reserve at a time is 30. Contact us for Party Arrangements")
+    @Min(value = 1, message = "Count must be atleast 1")
+    @NotNull(message = "count cannot be empty")
     public int count;
     public String comments;
     public String isAnniversary;
