@@ -1,5 +1,6 @@
 package com.accelerate.acceleronServices.configuration;
 
+import com.accelerate.acceleronServices.license.utils.EntityDTOConversion;
 import com.accelerate.acceleronServices.reservation.utils.CreateSummary;
 import com.accelerate.acceleronServices.reservation.utils.EntityDtoConversion;
 import lombok.extern.slf4j.Slf4j;
@@ -63,6 +64,11 @@ public class CommonBeanFactory {
     @Bean
     public EntityDtoConversion entityDtoConversion(){
         return new EntityDtoConversion();
+    }
+
+    @Bean
+    public EntityDTOConversion entityDTOConversion(){
+        return new EntityDTOConversion();
     }
 
     @Bean
