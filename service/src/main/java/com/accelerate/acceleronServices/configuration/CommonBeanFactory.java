@@ -1,8 +1,11 @@
 package com.accelerate.acceleronServices.configuration;
 
+import com.accelerate.acceleronServices.license.utils.EntityDTOConversion;
+import com.accelerate.acceleronServices.reservation.utils.CreateSummary;
+import com.accelerate.acceleronServices.reservation.utils.EntityDtoConversion;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletRegistrationBean;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -50,5 +53,26 @@ public class CommonBeanFactory {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
+
+
+    @Bean
+    public EntityDtoConversion entityDtoConversion(){
+        return new EntityDtoConversion();
+    }
+
+    @Bean
+    public EntityDTOConversion entityDTOConversion(){
+        return new EntityDTOConversion();
+    }
+
+    @Bean
+    public CreateSummary createSummary(){
+        return new CreateSummary();
     }
 }

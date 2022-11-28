@@ -30,9 +30,12 @@ repositories {
 
 dependencies {
     compile project(':smart-menu')
+    compile project(':reservation')
+    compile project(':license')
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compileOnly 'org.projectlombok:lombok:1.18.10'
     compile('org.springframework.boot:spring-boot-starter-test')
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile('org.modelmapper:modelmapper:1.1.0')
     implementation "org.springframework.boot:spring-boot-starter-data-jpa:2.1.3.RELEASE"
 }
