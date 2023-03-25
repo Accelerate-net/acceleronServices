@@ -32,6 +32,8 @@ dependencies {
     compile project(':smart-menu')
     compile project(':reservation')
     compile project(':license')
+    compile project(':communication')
+    compile project(':user')
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compileOnly 'org.projectlombok:lombok:1.18.10'
     compile('org.springframework.boot:spring-boot-starter-test')

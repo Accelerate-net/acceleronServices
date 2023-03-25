@@ -3,4 +3,7 @@ include 'service'
 include 'smart-menu'
 include 'reservation'
 include 'license'
+include 'communication'
+include 'user'
+
 

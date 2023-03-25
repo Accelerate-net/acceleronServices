@@ -1,8 +1,10 @@
 package com.accelerate.acceleronServices.configuration;
 
+import com.accelerate.acceleronServices.communication.utils.CommunicationEntityDtoConversion;
 import com.accelerate.acceleronServices.license.utils.EntityDTOConversion;
 import com.accelerate.acceleronServices.reservation.utils.CreateSummary;
 import com.accelerate.acceleronServices.reservation.utils.EntityDtoConversion;
+import com.accelerate.acceleronServices.user.utils.UserEntityDtoConversion;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletRegistrationBean;
@@ -70,6 +72,13 @@ public class CommonBeanFactory {
     public EntityDTOConversion entityDTOConversion(){
         return new EntityDTOConversion();
     }
+
+    @Bean
+    public CommunicationEntityDtoConversion communicationEntityDtoConversion(){ return new CommunicationEntityDtoConversion();}
+
+    @Bean
+    public UserEntityDtoConversion userEntityDtoConversion(){ return new UserEntityDtoConversion();}
+
 
     @Bean
     public CreateSummary createSummary(){
